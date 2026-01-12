@@ -15,10 +15,13 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/inventory';
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch((error) => console.error('MongoDB connection error:', error));
+const MONGODB_URI = process.env.MONGODB_URI ;
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => {
+    console.error("MongoDB error:", err);
+    process.exit(1); // shows clear error in logs
+  });
 
 // Routes
 app.use('/api/items', itemRoutes);
