@@ -37,8 +37,9 @@ async function connectTOMongoDB() {
 app.use((req, res, next) => {
   if (!isConnected) {
     connectTOMongoDB().then(() => next());
+  } else {
+    next();
   }
-  next();
 });
 
 // Routes
@@ -49,9 +50,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'Server is running' });
 });
 
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
 
-module.exports = app;
 export default app;
