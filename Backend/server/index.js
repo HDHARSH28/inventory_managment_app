@@ -16,9 +16,30 @@ app.use(express.json());
 
 // MongoDB connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/inventory';
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch((error) => console.error('MongoDB connection error:', error));
+// mongoose.connect(MONGODB_URI)
+//   .then(() => console.log('MongoDB connected successfully'))
+//   .catch((error) => console.error('MongoDB connection error:', error));
+
+let isConnected = false;
+async function connectTOMongoDB() {
+  try {
+    await mongoose.connect(MONGODB_URI,{
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    isConnected = true;
+    console.log('MongoDB connected successfully');
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+  }
+}
+
+app.use((req, res, next) => {
+  if (!isConnected) {
+    connectTOMongoDB().then(() => next());
+  }
+  next();
+});
 
 // Routes
 app.use('/api/items', itemRoutes);
@@ -28,8 +49,8 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'Server is running' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+// });
+module.exports = app;
 export default app;
