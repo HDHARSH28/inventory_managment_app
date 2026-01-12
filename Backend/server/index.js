@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/inventory';
+const MONGODB_URI = process.env.MONGODB_URI;
 // mongoose.connect(MONGODB_URI)
 //   .then(() => console.log('MongoDB connected successfully'))
 //   .catch((error) => console.error('MongoDB connection error:', error));
@@ -52,5 +52,6 @@ app.get('/api/health', (req, res) => {
 // app.listen(PORT, () => {
 //   console.log(`Server is running on port ${PORT}`);
 // });
+
 module.exports = app;
 export default app;
